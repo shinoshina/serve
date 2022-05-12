@@ -6,7 +6,7 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-func main() {
+func ttt() {
 
 	fd, err := unix.Socket(unix.AF_INET, unix.SOCK_STREAM, 0)
 	if err != nil {
@@ -30,6 +30,9 @@ func main() {
 		if clifd != -1 {
 			fmt.Println(clifd)
 			fmt.Println(cliaddr)
+
+			_,t := cliaddr.(*unix.SockaddrInet4)
+			fmt.Println(t)
 		}else{
 			fmt.Println(err)
 		}
