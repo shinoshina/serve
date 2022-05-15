@@ -57,7 +57,7 @@ func NewEpoller()(ep *Epoller){
 	ep = new(Epoller)
 	ep.channelList = make([]Channel,0)
 	ep.EpollFd = EpollCreate()
-	ep.eventList = make([]unix.EpollEvent, 0)
+	ep.eventList = make([]unix.EpollEvent, 10)
 	return ep
 }
 
@@ -90,9 +90,12 @@ func (ep Epoller) RemoveChannel(fd int) {
 
 func (ep Epoller) Epoll(channels []Channel) int {
 
-	evNum, err := unix.EpollWait(ep.EpollFd, ep.eventList, 10)
+	evNum, err := unix.EpollWait(ep.EpollFd, ep.eventList, 0)
 
 	if err != nil {
+
+		fmt.Printf("epoll fd %v \n",ep.EpollFd)
+		fmt.Println("here wrong")
 		fmt.Println(err)
 	}
 
