@@ -77,7 +77,7 @@ func (ep Epoller) RemoveChannel(fd int) {
 
 }
 
-func (ep Epoller) Epoll() int {
+func (ep Epoller) Epoll(channels []Channel) int {
 
 	evNum, err := unix.EpollWait(ep.epollFd, ep.eventList, 10)
 
@@ -86,6 +86,8 @@ func (ep Epoller) Epoll() int {
 	}
 
 	if evNum > 0 {
+
+		ep.fillChannels(channels,evNum)
 
 	}
 
