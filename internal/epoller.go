@@ -34,7 +34,6 @@ import (
 // EPOLL_CTL_MOD                               = 0x3
 
 const (
-
 	ErrEvents = unix.EPOLLERR | unix.EPOLLHUP | unix.EPOLLRDHUP
 
 	OutEvents = ErrEvents | unix.EPOLLOUT
@@ -59,11 +58,52 @@ func EpollCreate() (fd int) {
 	return epfd
 }
 
-func (ep Epoller) AddEvent(fd int) {
+func (ep Epoller) AddChannel(fd int) {
 
-	ev := unix.EpollEvent{
+	ev := unix.EpollEvent{}
+
+	unix.EpollCtl(ep.epollFd, unix.EPOLL_CTL_ADD, fd, &ev)
+
+	// ep.eventList = append(ep.eventList, ev)
+	// ep.eventNum++
+
+	ch := Channel{
+		fd: fd,
 	}
-	unix.EpollCtl(ep.epollFd, InEvents | ErrEvents|OutEvents, fd, &ev)
-	ep.eventList = append(ep.eventList, ev)
-	ep.eventNum++
+	ep.channelList = append(ep.channelList, ch)
+}
+
+func (ep Epoller) RemoveChannel(fd int) {
+
+}
+
+func (ep Epoller) Epoll() int {
+
+	evNum, err := unix.EpollWait(ep.epollFd, ep.eventList, 10)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if evNum > 0 {
+
+	}
+
+	return evNum
+
+}
+
+func (ep Epoller) fillChannels(channels []Channel, evNum int) {
+
+	for i := 0; i < evNum; i++ {
+
+		tmpch := Channel{
+		}
+		tmpch.setRevent(int(ep.eventList[i].Events))
+		tmpch.fd = int(ep.eventList[i].Fd)
+
+		channels = append(channels, tmpch)
+
+	}
+
 }
