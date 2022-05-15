@@ -45,9 +45,20 @@ type Epoller struct {
 	thisLoop    *EventLoop
 	channelList []Channel
 	sequence    uint16
-	epollFd     int
+	EpollFd     int
 	eventList   []unix.EpollEvent
 	eventNum    int
+}
+
+func NewEpoller()(ep *Epoller){
+
+
+
+	ep = new(Epoller)
+	ep.channelList = make([]Channel,0)
+	ep.EpollFd = EpollCreate()
+	ep.eventList = make([]unix.EpollEvent, 0)
+	return ep
 }
 
 func EpollCreate() (fd int) {
@@ -62,7 +73,7 @@ func (ep Epoller) AddChannel(fd int) {
 
 	ev := unix.EpollEvent{}
 
-	unix.EpollCtl(ep.epollFd, unix.EPOLL_CTL_ADD, fd, &ev)
+	unix.EpollCtl(ep.EpollFd, unix.EPOLL_CTL_ADD, fd, &ev)
 
 	// ep.eventList = append(ep.eventList, ev)
 	// ep.eventNum++
@@ -79,7 +90,7 @@ func (ep Epoller) RemoveChannel(fd int) {
 
 func (ep Epoller) Epoll(channels []Channel) int {
 
-	evNum, err := unix.EpollWait(ep.epollFd, ep.eventList, 10)
+	evNum, err := unix.EpollWait(ep.EpollFd, ep.eventList, 10)
 
 	if err != nil {
 		fmt.Println(err)
