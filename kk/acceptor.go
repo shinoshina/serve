@@ -1,4 +1,4 @@
-package internal
+package kk
 
 import (
 	"fmt"
@@ -25,14 +25,13 @@ func defaultConnectionCb()(){
 }
 
 
-func (ac Acceptor)Init_test()(){
+func (ac *Acceptor)Init_test()(){
 
 	fd,err := unix.Socket(unix.AF_INET, unix.SOCK_STREAM, 0)
 	ac.AcFd = fd
 	if err != nil{
 		fmt.Println(err)
 	}
-	fmt.Println(ac.AcFd)
 
 	address := [4]byte{127, 0, 0, 1}
 	addr := &unix.SockaddrInet4{

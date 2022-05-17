@@ -21,8 +21,7 @@ func ttt() {
 
 	unix.Bind(fd, addr)
 
-
-	unix.Listen(fd,5)
+	unix.Listen(fd, 5)
 
 	for {
 		clifd, cliaddr, err := unix.Accept(fd)
@@ -31,9 +30,9 @@ func ttt() {
 			fmt.Println(clifd)
 			fmt.Println(cliaddr)
 
-			_,t := cliaddr.(*unix.SockaddrInet4)
+			_, t := cliaddr.(*unix.SockaddrInet4)
 			fmt.Println(t)
-		}else{
+		} else {
 			fmt.Println(err)
 		}
 	}

@@ -1,19 +1,13 @@
 package main
 
 import (
-
 	"fmt"
-	"goserve/internal"
+	"goserve/kk"
 )
 
+func t2() {
 
-func t2(){
-
-
-	
-	a := internal.Convert("127.0.0.1")
+	a := kk.Convert("127.0.0.1")
 	fmt.Println(a)
-
-
 
 }

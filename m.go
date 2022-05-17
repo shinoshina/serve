@@ -1,23 +1,19 @@
 package main
 
-import "goserve/internal"
+import (
+	"goserve/kk"
+)
 
-func main(){
+func main() {
 
-
-	ac := internal.Acceptor{
-
-	}
+	ac := kk.Acceptor{}
 	ac.Init_test()
+	
 
-
-	ep := internal.NewEpoller()
+	ep := kk.NewEpoller()
 	ep.AddChannel(ac.AcFd)
 
-
-	evl := internal.NewEventLoop(ep)
+	evl := kk.NewEventLoop(ep)
 	evl.Loop()
-
-
 
 }

@@ -1,9 +1,6 @@
 package main
 
-
-type Test struct{
-
-
+type Test struct {
 	Invisual int
-	Visual int
+	Visual   int
 }
