@@ -116,7 +116,7 @@ func (ep *Epoller) Epoll(channels []Channel) int {
 
 }
 
-func (ep Epoller) fillChannels(channels []Channel, evNum int) {
+func (ep *Epoller) fillChannels(channels []Channel, evNum int) {
 
 	for i := 0; i < evNum; i++ {
 
