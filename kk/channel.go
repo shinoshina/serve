@@ -30,6 +30,9 @@ var readCb EventCallback = func(fd int) string {
 var writeCb EventCallback
 var errCb EventCallback
 
+///////////////////////////////////////////////////////////////////////////////////////
+/******HERE******HERE******/ var disconnCb EventCallback /******HERE******HERE********/ 
+///////////////////////////////////////////////////////////////////////////////////////
 type Channel struct {
 	fd     int
 	revent int

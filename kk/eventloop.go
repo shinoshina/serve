@@ -7,13 +7,18 @@ type EventLoop struct {
 	activeChannels []Channel
 }
 
-func NewEventLoop(ep *Epoller) (evl *EventLoop) {
+func NewEventLoop() (evl *EventLoop) {
 
 	evl = new(EventLoop)
-
-	evl.epoller = ep
 	evl.activeChannels = make([]Channel, 10)                    //FIX ME: here if events too many,consider appending
+	evl.epoller = NewEpoller()
+
+
 	fmt.Printf("eloop epoll fd %v\n",evl.epoller.EpollFd)
+	
+
+
+
 	return evl
 }
 func (evl *EventLoop) Loop() {
@@ -32,4 +37,11 @@ func (evl *EventLoop) Loop() {
 		}
 
 	}
+}
+
+
+func(evl *EventLoop) register(fd int){
+
+	evl.epoller.AddChannel(fd)
+
 }

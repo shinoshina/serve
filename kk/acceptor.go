@@ -6,30 +6,33 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-
-
-
-
-type Acceptor struct{
-
-
-	AcFd int
+type Acceptor struct {
+	AcFd        int
 	AcFdChannel Channel
-
 }
 
-func defaultConnectionCb()(){
-
+func defaultConnectionCb() {
 
 	fmt.Println("new connection")
 }
 
+func NewAcceptor() (ac *Acceptor) {
 
-func (ac *Acceptor)Init_test()(){
-
-	fd,err := unix.Socket(unix.AF_INET, unix.SOCK_STREAM, 0)
+	ac = new(Acceptor)
+	fd, err := unix.Socket(unix.AF_INET, unix.SOCK_STREAM, 0)
+	if err != nil {
+		fmt.Println(err)
+	}
 	ac.AcFd = fd
-	if err != nil{
+	return
+
+}
+
+func (ac *Acceptor) Init_test() {
+
+	fd, err := unix.Socket(unix.AF_INET, unix.SOCK_STREAM, 0)
+	ac.AcFd = fd
+	if err != nil {
 		fmt.Println(err)
 	}
 
@@ -40,7 +43,19 @@ func (ac *Acceptor)Init_test()(){
 	}
 
 	unix.Bind(fd, addr)
-	unix.Listen(fd,5)
+	unix.Listen(fd, 5)
+
+}
 
 
+func (ac *Acceptor) listen(adr TcpAddress){
+
+
+	addr := &unix.SockaddrInet4{
+		Port: adr.Port,
+		Addr: Convert(adr.Address),
+	}
+
+	unix.Bind(ac.AcFd,addr)
+	unix.Listen(ac.AcFd,5)
 }

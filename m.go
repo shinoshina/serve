@@ -13,7 +13,7 @@ func main() {
 	ep := kk.NewEpoller()
 	ep.AddChannel(ac.AcFd)
 
-	evl := kk.NewEventLoop(ep)
+	evl := kk.NewEventLoop()
 	evl.Loop()
 
 }

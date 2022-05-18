@@ -12,9 +12,9 @@ type TcpAddress struct {
 	Address string
 }
 
-func Convert(addr string) (raw_address []byte) {
+func Convert(addr string) (raw_address [4]byte) {
 	s := strings.SplitN(addr,".",4)
-	raw_address = make([]byte,4)
+	//raw_address = make([]byte)
 	for i := 0; i < 4; i++ {
 		b,_ := strconv.Atoi(s[i])
 		raw_address[i] = byte(b)
