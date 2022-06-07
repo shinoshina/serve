@@ -1,4 +1,4 @@
-package kk
+package netbase
 
 import (
 	"fmt"
@@ -11,9 +11,21 @@ type Acceptor struct {
 	AcFdChannel Channel
 }
 
-func defaultConnectionCb() {
+func defaultConnectionCb(fd int) {
 
-	fmt.Println("new connection")
+	clifd, cliaddr, err := unix.Accept(fd)
+
+	if clifd != -1 {
+		fmt.Println(clifd)
+		fmt.Println(cliaddr)
+
+		_, t := cliaddr.(*unix.SockaddrInet4)
+		fmt.Println(t)
+	} else {
+		fmt.Println(err)
+	}
+
+	fmt.Println("acceptor handle connect event")
 }
 
 func NewAcceptor() (ac *Acceptor) {
@@ -59,3 +71,5 @@ func (ac *Acceptor) listen(adr TcpAddress){
 	unix.Bind(ac.AcFd,addr)
 	unix.Listen(ac.AcFd,5)
 }
+
+

@@ -1,4 +1,4 @@
-package kk
+package netbase
 
 import "fmt"
 
@@ -40,7 +40,7 @@ func (evl *EventLoop) Loop() {
 }
 
 
-func(evl *EventLoop) register(fd int){
+func(evl *EventLoop) Register(fd int,channelType int){
 
 	evl.epoller.AddChannel(fd)
 

@@ -1,9 +1,18 @@
-package kk
+
+// already shit,bu yao le
+package netbase
 
 import (
 	"fmt"
 
 	"golang.org/x/sys/unix"
+)
+
+
+const(
+
+	NormalChannel int = 0
+	AcceptorChannel int = 1
 )
 
 
@@ -36,6 +45,7 @@ var errCb EventCallback
 type Channel struct {
 	fd     int
 	revent int
+	
 }
 
 func (ch *Channel) setRevent(event int) {

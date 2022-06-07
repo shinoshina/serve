@@ -1,4 +1,4 @@
-package main
+package test
 
 type Test struct {
 	Invisual int
