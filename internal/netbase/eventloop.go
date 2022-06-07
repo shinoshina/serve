@@ -29,7 +29,7 @@ func (evl* eventloop)AcceptHandler(fd int32,event uint32){
 
 	if event & InEvents != 0 {
 
-		evl.eng.accept(fd)
+		evl.eng_from.accept(fd)
 
 	}
 }
@@ -38,7 +38,7 @@ type epoll_callback func(fd int32, event uint32)
 
 type eventloop struct {
 
-	eng *engine
+	eng_from *engine
 
 	conn_map map[int32](*connction)
 

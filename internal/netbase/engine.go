@@ -20,11 +20,12 @@ func NewEngine() (eng *engine) {
 
 	eng = new(engine)
 	eng.main_evl = newEventloop("acceptor")
+	eng.main_evl.eng_from = eng
+
+	//eng.sub_evls = make([]*eventloop, 1)
+	//eng.sub_evls[0] = newEventloop("compute")
 
 	return
-}
-func (eng *engine) register(fd int32) {
-
 }
 
 func (eng *engine) accept(fd int32) (conn *connction) {
@@ -34,8 +35,10 @@ func (eng *engine) accept(fd int32) (conn *connction) {
 	conn = newConnection(int32(clifd))
 	conn.raddr.Raw_address = cliaddr.(*unix.SockaddrInet4).Addr
 	conn.raddr.Port = cliaddr.(*unix.SockaddrInet4).Port
-     
+    
+	
 	fmt.Printf("new connection\naddress : %v \nport : %v\n",conn.raddr.Raw_address,conn.raddr.Port)
+	eng.main_evl.register(clifd)
 	return
 
 }
@@ -52,7 +55,7 @@ func(e *engine) Start(){
 
 	address := [4]byte{127, 0, 0, 1}
 	addr := &unix.SockaddrInet4{
-		Port: 4201,
+		Port: 4211,
 		Addr: address,
 	}
 

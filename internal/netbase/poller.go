@@ -22,9 +22,17 @@ func (p *poller) Epoll(handler epoll_callback)  {
 			fmt.Println(err)
 		}
 
+		if event_num == -1 {
+
+			fmt.Println("err")
+		}
+
 		for i := 0; i < event_num; i++ {
 
 			ev := event_list[i]
+			fmt.Println("is it true?")
+			fmt.Println(ev.Events)
+			fmt.Println(ev.Fd)
 			handler(ev.Fd, ev.Events)
 		}
 	}
