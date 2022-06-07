@@ -7,18 +7,22 @@ import (
 
 //import "golang.org/x/sys/unix"
 
-type TcpAddress struct {
+type address struct {
 	Port    int
 	Address string
 }
+type raw_address struct{
+	Port int
+	Raw_address [4]byte
+}
 
-func Convert(addr string) (raw_address [4]byte) {
+func Convert(addr string) (ra [4]byte) {
 	s := strings.SplitN(addr,".",4)
 	//raw_address = make([]byte)
 	for i := 0; i < 4; i++ {
 		b,_ := strconv.Atoi(s[i])
-		raw_address[i] = byte(b)
+		ra[i] = byte(b)
 	}
-	return raw_address
+	return
 
 }

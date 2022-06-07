@@ -18,6 +18,7 @@ func (p *poller) Epoll(handler epoll_callback)  {
 
 		event_num, err := unix.EpollWait(p.epoller_fd, event_list, 10) // someone set the timeout to 0ms ，so the cpu conquer high to 15%，too tm cool
 		if err != nil {
+			fmt.Println("epoll wait error")
 			fmt.Println(err)
 		}
 
@@ -30,6 +31,38 @@ func (p *poller) Epoll(handler epoll_callback)  {
 
 }
 
+func(p *poller)register(fd int){
+
+	ev := unix.EpollEvent{}
+	ev.Events = InEvents
+	ev.Fd = int32(fd)
+
+	err := unix.EpollCtl(p.epoller_fd, unix.EPOLL_CTL_ADD, fd, &ev)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Printf("poll register fd : %v \n",fd)
+
+}
+
 func newPoller()(p *poller){
+
+	p = new(poller)
+	p.epoller_fd = epoll_create()
+
 	return
 }
+
+func epoll_create() (fd int) {
+	epfd, err := unix.EpollCreate1(0)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Printf("epoll fd created : %v\n",epfd)
+	return epfd
+}
+
+

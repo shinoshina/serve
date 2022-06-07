@@ -1,6 +1,10 @@
 package netbase
 
-import "golang.org/x/sys/unix"
+import (
+	"fmt"
+
+	"golang.org/x/sys/unix"
+)
 
 const (
 	ErrEvents = unix.EPOLLERR | unix.EPOLLHUP | unix.EPOLLRDHUP
@@ -25,7 +29,7 @@ func (evl* eventloop)AcceptHandler(fd int32,event uint32){
 
 	if event & InEvents != 0 {
 
-		evl.eng.register(fd)
+		evl.eng.accept(fd)
 
 	}
 }
@@ -70,4 +74,11 @@ func newEventloop(evl_type string) (evl *eventloop){
 func (evl *eventloop) loop() {
 
 	evl.epoller.Epoll(evl.AcceptHandler)
+}
+
+func (evl *eventloop)register(fd int){
+
+	fmt.Printf("evl register fd : %v \n",fd)
+
+	evl.epoller.register(fd)
 }
