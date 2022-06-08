@@ -22,12 +22,20 @@ func NewEngine() (eng *engine) {
 	eng.main_evl = newEventloop("acceptor")
 	eng.main_evl.eng_from = eng
 
-	//eng.sub_evls = make([]*eventloop, 1)
-	//eng.sub_evls[0] = newEventloop("compute")
+	eng.sub_evls = make([]*eventloop, 1)
+	eng.sub_evls[0] = newEventloop("compute")
+
+	eng.evl_map = make(map[int32]*eventloop)
 
 	return
 }
 
+func (eng *engine) register(fd int32){
+
+	eng.sub_evls[0].register(int(fd))
+    eng.evl_map[fd] = eng.sub_evls[0]
+
+}
 func (eng *engine) accept(fd int32) (conn *connction) {
 
 	clifd, cliaddr, _ := unix.Accept(int(fd))
@@ -36,16 +44,15 @@ func (eng *engine) accept(fd int32) (conn *connction) {
 	conn.raddr.Raw_address = cliaddr.(*unix.SockaddrInet4).Addr
 	conn.raddr.Port = cliaddr.(*unix.SockaddrInet4).Port
     
-	
 	fmt.Printf("new connection\naddress : %v \nport : %v\n",conn.raddr.Raw_address,conn.raddr.Port)
-	eng.main_evl.register(clifd)
+	eng.register(int32(clifd))
 	return
 
 }
 
 func(e *engine) Start(){
 
-	fd, err := unix.Socket(unix.AF_INET, unix.SOCK_STREAM, 0)
+	fd, err := unix.Socket(unix.AF_INET, unix.SOCK_STREAM | unix.SOCK_NONBLOCK, 0)
 	if err!= nil{
 		fmt.Println(err)
 	}
@@ -60,11 +67,11 @@ func(e *engine) Start(){
 	}
 
 	unix.Bind(fd, addr)
-
 	unix.Listen(fd, 5)
 
 	e.main_evl.register(fd)
 
+	go e.sub_evls[0].loop()
 
 	e.main_evl.loop()
 
