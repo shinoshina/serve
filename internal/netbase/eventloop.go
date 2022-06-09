@@ -13,7 +13,8 @@ const (
 
 	InEvents = ErrEvents | unix.EPOLLIN | unix.EPOLLPRI
 )
-func (evl *eventloop) unregister(fd int32){
+
+func (evl *eventloop) unregister(fd int32) {
 
 	evl.epoller.unregister(fd)
 
@@ -35,8 +36,9 @@ func (evl *eventloop) ComputeHandler(fd int32, event uint32) {
 				fmt.Println(err)
 			}
 			if n > 0 {
+				fmt.Println(p)
 				fmt.Println(string(p))
-				unix.Write(int(fd),p)
+				unix.Write(int(fd), p)
 			}
 		}
 

@@ -6,14 +6,14 @@ package test
 
 // func main() {
 
-// 	// ac := netbase.Acceptor{}
-// 	// ac.Init_test()
+// 	ac := netbase.Acceptor{}
+// 	ac.Init_test()
 	
 
-// 	// ep := netbase.NewEpoller()
-// 	// ep.AddChannel(ac.AcFd)
+// 	ep := netbase.NewEpoller()
+// 	ep.AddChannel(ac.AcFd)
 
-// 	// evl := netbase.NewEventLoop()
-// 	// evl.Loop()
+// 	evl := netbase.NewEventLoop()
+// 	evl.Loop()
 
 // }

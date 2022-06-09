@@ -2,6 +2,7 @@ package netbase
 
 import (
 	"fmt"
+	"runtime"
 
 	"golang.org/x/sys/unix"
 )
@@ -10,16 +11,28 @@ type poller struct {
 	epoller_fd int
 }
 
+
+
 func (p *poller) Epoll(handler epoll_callback)  {
 
 	event_list := make([]unix.EpollEvent, 128)
 
+
+	//when msec set -1, a empty epoll_wait will be blocked until a event come
+	msec := -1
 	for {
-		event_num, err := unix.EpollWait(p.epoller_fd, event_list, 10) // someone set the timeout to 0ms ，so the cpu conquer high to 15%，too tm cool
-		if err != nil {
-			fmt.Printf("epoll wait error, fd : %v",p.epoller_fd)
-			fmt.Println(err)
+		//fmt.Println("blocked?")
+		event_num, err := unix.EpollWait(p.epoller_fd, event_list, msec) // someone set the timeout to 0ms ，so the cpu conquer high to 15%，too tm cool
+		if event_num ==0 || (event_num <0 && err == unix.EINTR ) {    // but when the msec is 0 , epoll_wait interrupted systemcall(unix.EINTR) will not occur
+			msec = -1
+			if event_num == -1 {
+				fmt.Println(err)
+			}
+			runtime.Gosched()
+			continue
 		}
+
+		msec = 0
 
 		if event_num == -1 {
 
