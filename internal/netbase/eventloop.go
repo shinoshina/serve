@@ -32,7 +32,7 @@ func (evl *eventloop) ComputeHandler(fd int32, event uint32) {
 
 			p := make([]byte, 50)
 			n, err := unix.Read(int(fd), p)
-			if err != nil {
+			if err != nil{
 				fmt.Println(err)
 			}
 			if n > 0 {
