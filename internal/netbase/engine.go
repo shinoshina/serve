@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"golang.org/x/sys/unix"
+	"goserve/internal/base/logger"
 )
 
 type engine struct {
@@ -87,6 +88,8 @@ func (e *engine) Launch() {
 	e.efd = fd
 
 	fmt.Printf("engine fd : %v \n", e.efd)
+	logger.Debugf("this is a debug message")
+	
 
 	address := [4]byte{127, 0, 0, 1}
 	addr := &unix.SockaddrInet4{
