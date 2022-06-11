@@ -33,38 +33,42 @@ var (
 
 func init() {
 
-	debugLogger = log.New(os.Stderr, "[DEBUG]  \n", 0)
-	infoLogger = log.New(os.Stderr, "[INFO]", logFlag)
-	warnLogger = log.New(os.Stderr, "[WARN]", logFlag)
-	errLogger = log.New(os.Stderr, "[ERROR]", logFlag)
-	fatalLogger = log.New(os.Stderr, "[FATAL]", logFlag)
+	debugLogger = log.New(os.Stderr, colorConvert(32,"[DEBUG]  \n"), 0)
+	infoLogger = log.New(os.Stderr, colorConvert(32,"[INFO]  \n"), 0)
+	warnLogger = log.New(os.Stderr, colorConvert(36,"[WARN]  \n"), 0)
+	errLogger = log.New(os.Stderr, colorConvert(33,"[ERROR]  \n"), 0)
+	fatalLogger = log.New(os.Stderr, colorConvert(31,"[FATAL]  \n"), 0)
 
+}
+
+func colorConvert(color int,raw string)(s string){
+
+	return fmt.Sprintf("\x1b[0;%dm%s\x1b[0m", color,raw )
 }
 
 func handleRaw(raw string, color int) (s string) {
 	pc, path, line, _ := runtime.Caller(1)
-	location := fmt.Sprintf("[location]: %s [line]: %d\n", path, line)
+	location := fmt.Sprintf("[Location]: %s [Line]: %d\n", path, line)
 	funcName := runtime.FuncForPC(pc).Name()
-	info := location + "[caller]: " + funcName + "\n"
+	info := location + "[Caller]: " + funcName + "\n"
 
-	k := "[time]: " + timer.CurrentTime() + "\n" + info + "[message]: " + raw
-	s = fmt.Sprintf("\x1b[0;%dm%s\x1b[0m", 32, k)
+	k := "[Time]: " + timer.CurrentTime() + "\n" + info + "[Message]: " + raw
+	s = fmt.Sprintf("\x1b[0;%dm%s\x1b[0m", color, k)
 	return
 
 }
 func Debugf(format string, v ...interface{}) {
-
 	debugLogger.Printf(handleRaw(format, 32), v...)
 }
 func Infof(format string, v ...interface{}) {
-	infoLogger.Printf(format, v...)
+	infoLogger.Printf(handleRaw(format, 32), v...)
 }
 func Warnf(format string, v ...interface{}) {
-	warnLogger.Printf(format, v...)
+	warnLogger.Printf(handleRaw(format, 36), v...)
 }
 func Errorf(format string, v ...interface{}) {
-	errLogger.Printf(format, v...)
+	errLogger.Printf(handleRaw(format, 33), v...)
 }
 func Fatalf(format string, v ...interface{}) {
-	fatalLogger.Printf(format, v...)
+	fatalLogger.Printf(handleRaw(format, 31), v...)
 }

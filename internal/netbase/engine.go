@@ -89,6 +89,10 @@ func (e *engine) Launch() {
 
 	fmt.Printf("engine fd : %v \n", e.efd)
 	logger.Debugf("this is a debug message")
+	logger.Infof("this is a debug message")
+	logger.Warnf("this is a debug message")
+	logger.Fatalf("this is a debug message")
+	logger.Errorf("this is a debug message")
 	
 
 	address := [4]byte{127, 0, 0, 1}
