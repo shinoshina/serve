@@ -89,14 +89,14 @@ func (e *engine) Launch() {
 	fmt.Printf("engine fd : %v \n", e.efd)
 	
 
-	address := [4]byte{127, 0, 0, 1}
+	addressb := [4]byte{127, 0, 0, 1}
 	addr := &unix.SockaddrInet4{
 		Port: 4211,
-		Addr: address,
+		Addr: addressb,
 	}
 
 	ac := newConnection(int32(fd))
-	ac.local_addr.Address = address
+	ac.local_addr.Address = addressb
 	ac.local_addr.Port = 4211
 
 	unix.Bind(fd, addr)

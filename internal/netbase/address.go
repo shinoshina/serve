@@ -7,11 +7,11 @@ import (
 
 //import "golang.org/x/sys/unix"
 
-type address struct {
-	Port    int
-	Address string
-}
-type rawAddress struct{
+// type address struct {
+// 	Port    int
+// 	Address string
+// }
+type address struct{
 	Port int
 	Address [4]byte
 }

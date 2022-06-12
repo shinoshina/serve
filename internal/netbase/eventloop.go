@@ -49,7 +49,7 @@ func (evl *eventloop) write(c *connction) {
 }
 func (evl *eventloop) read(c *connction) {
 
-	n, err := unix.Read(int(c.fd), c.buf)
+	n, err := c.read()
 	if err != nil || n == 0 {
 		if err == unix.EAGAIN {
 			logger.Errorf("%v", err)
@@ -62,7 +62,7 @@ func (evl *eventloop) read(c *connction) {
 			evl.unregister(c.fd)
 		}
 	}
-	unix.Write(int(c.fd),c.buf)
+	c.write()
 
 }
 

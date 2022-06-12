@@ -54,13 +54,13 @@ func colorConvert(color int, raw string) (s string) {
 }
 
 func handleRaw(raw string, color int) (s string) {
-	pc, path, line, _ := runtime.Caller(2)
+	_, path, line, _ := runtime.Caller(2)
 
-	l := fmt.Sprintf("[Location]: %s [Line]: %d\n", path, line)
-	f := runtime.FuncForPC(pc).Name()
-	i := l + "[Caller]: " + f + "\n"
+	l := fmt.Sprintf("[Location] %s [Line] %d\n", path, line)
+	//f := runtime.FuncForPC(pc).Name()
+	//i := l + "[Caller] " + f + "\n"
 
-	k := raw + "\n" + "[Time]: " + timer.CurrentTime() + "\n" + i
+	k := raw + "\n" + "[Time] " + timer.CurrentTime() + "\n" + l
 	s = fmt.Sprintf("\x1b[0;%dm%s\x1b[0m", color, k)
 	return
 
