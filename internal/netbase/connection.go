@@ -4,16 +4,25 @@ package netbase
 type connction struct{
 
 	evl_from *eventloop
-	buf string // use string temply
+	buf []byte // use string temply
 	fd int32
-	raddr raw_address
-}
+	local_addr rawAddress
+	remote_addr rawAddress
+ }
 
-func newConnection(fd int32) (conn *connction){
+func newConnection(fd int32) (c *connction){
 
-	conn = new(connction)
-    conn.fd = fd
-	// conn.evl_from = evl
+	c = new(connction)
+    c.fd = fd
+	c.buf = make([]byte, 50)
 
 	return;
+}
+
+func (c *connction)write(){
+
+
+}
+func (c *connction)read(){
+	
 }

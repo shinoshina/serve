@@ -11,9 +11,9 @@ type address struct {
 	Port    int
 	Address string
 }
-type raw_address struct{
+type rawAddress struct{
 	Port int
-	Raw_address [4]byte
+	Address [4]byte
 }
 
 func Convert(addr string) (ra [4]byte) {

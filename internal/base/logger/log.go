@@ -21,6 +21,13 @@ const (
 const (
 	logFlag = log.Ldate | log.Ltime
 )
+const (
+	DEBUGC = 32 //RED
+	INFOC  = 32
+	WARNC  = 36
+	ERRORC = 33
+	FATALC = 31
+)
 
 var (
 	logFile     io.Writer
@@ -33,42 +40,43 @@ var (
 
 func init() {
 
-	debugLogger = log.New(os.Stderr, colorConvert(32,"[DEBUG]  \n"), 0)
-	infoLogger = log.New(os.Stderr, colorConvert(32,"[INFO]  \n"), 0)
-	warnLogger = log.New(os.Stderr, colorConvert(36,"[WARN]  \n"), 0)
-	errLogger = log.New(os.Stderr, colorConvert(33,"[ERROR]  \n"), 0)
-	fatalLogger = log.New(os.Stderr, colorConvert(31,"[FATAL]  \n"), 0)
+	debugLogger = log.New(os.Stderr, colorConvert(DEBUGC, "[DEBUG] "), 0)
+	infoLogger = log.New(os.Stderr, colorConvert(INFOC, "[INFO] "), 0)
+	warnLogger = log.New(os.Stderr, colorConvert(WARNC, "[WARN] "), 0)
+	errLogger = log.New(os.Stderr, colorConvert(ERRORC, "[ERROR] "), 0)
+	fatalLogger = log.New(os.Stderr, colorConvert(FATALC, "[FATAL] "), 0)
 
 }
 
-func colorConvert(color int,raw string)(s string){
+func colorConvert(color int, raw string) (s string) {
 
-	return fmt.Sprintf("\x1b[0;%dm%s\x1b[0m", color,raw )
+	return fmt.Sprintf("\x1b[0;%dm%s\x1b[0m", color, raw)
 }
 
 func handleRaw(raw string, color int) (s string) {
-	pc, path, line, _ := runtime.Caller(1)
-	location := fmt.Sprintf("[Location]: %s [Line]: %d\n", path, line)
-	funcName := runtime.FuncForPC(pc).Name()
-	info := location + "[Caller]: " + funcName + "\n"
+	pc, path, line, _ := runtime.Caller(2)
 
-	k := "[Time]: " + timer.CurrentTime() + "\n" + info + "[Message]: " + raw
+	l := fmt.Sprintf("[Location]: %s [Line]: %d\n", path, line)
+	f := runtime.FuncForPC(pc).Name()
+	i := l + "[Caller]: " + f + "\n"
+
+	k := raw + "\n" + "[Time]: " + timer.CurrentTime() + "\n" + i
 	s = fmt.Sprintf("\x1b[0;%dm%s\x1b[0m", color, k)
 	return
 
 }
 func Debugf(format string, v ...interface{}) {
-	debugLogger.Printf(handleRaw(format, 32), v...)
+	debugLogger.Printf(handleRaw(format, DEBUGC), v...)
 }
 func Infof(format string, v ...interface{}) {
-	infoLogger.Printf(handleRaw(format, 32), v...)
+	infoLogger.Printf(handleRaw(format, INFOC), v...)
 }
 func Warnf(format string, v ...interface{}) {
-	warnLogger.Printf(handleRaw(format, 36), v...)
+	warnLogger.Printf(handleRaw(format, WARNC), v...)
 }
 func Errorf(format string, v ...interface{}) {
-	errLogger.Printf(handleRaw(format, 33), v...)
+	errLogger.Printf(handleRaw(format, ERRORC), v...)
 }
 func Fatalf(format string, v ...interface{}) {
-	fatalLogger.Printf(handleRaw(format, 31), v...)
+	fatalLogger.Fatalf(handleRaw(format, FATALC), v...)
 }

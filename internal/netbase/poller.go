@@ -52,7 +52,7 @@ func (p *poller) Epoll(handler epoll_callback)  {
 func(p *poller)register(fd int){
 
 	ev := unix.EpollEvent{}
-	ev.Events = InEvents
+	ev.Events = InEvents | unix.EPOLLET
 	ev.Fd = int32(fd)
 
 	err := unix.EpollCtl(p.epoller_fd, unix.EPOLL_CTL_ADD, fd, &ev)

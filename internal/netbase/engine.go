@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"golang.org/x/sys/unix"
-	"goserve/internal/base/logger"
 )
 
 type engine struct {
@@ -58,23 +57,23 @@ func (eng *engine) dispatch()(num int){
     return
 }
 
-func (eng *engine) register(fd int32,num int) {
+func (eng *engine) register(c *connction,num int) {
 
-	eng.sub_evls[num].register(int(fd))
-	eng.evl_map[fd] = eng.sub_evls[num]
+	eng.sub_evls[num].register(c)
+	eng.evl_map[c.fd] = eng.sub_evls[num]
 
 }
-func (eng *engine) accept(fd int32) (conn *connction) {
+func (eng *engine) accept(fd int32) (c *connction) {
 
 	clifd, cliaddr, _ := unix.Accept4(int(fd), unix.SOCK_NONBLOCK)
 
-	conn = newConnection(int32(clifd))
-	conn.raddr.Raw_address = cliaddr.(*unix.SockaddrInet4).Addr
-	conn.raddr.Port = cliaddr.(*unix.SockaddrInet4).Port
+	c = newConnection(int32(clifd))
+	c.local_addr.Address = cliaddr.(*unix.SockaddrInet4).Addr
+	c.local_addr.Port = cliaddr.(*unix.SockaddrInet4).Port
 
-	fmt.Printf("new connection\naddress : %v \nport : %v\nnumber %v loops listening\n", conn.raddr.Raw_address, conn.raddr.Port,eng.next_loop)
+	fmt.Printf("new connection\naddress : %v \nport : %v\nnumber %v loops listening\n", c.local_addr.Address, c.local_addr.Port,eng.next_loop)
 
-	eng.register(int32(clifd),eng.dispatch())
+	eng.register(c,eng.dispatch())
 	return
 
 }
@@ -88,11 +87,6 @@ func (e *engine) Launch() {
 	e.efd = fd
 
 	fmt.Printf("engine fd : %v \n", e.efd)
-	logger.Debugf("this is a debug message")
-	logger.Infof("this is a debug message")
-	logger.Warnf("this is a debug message")
-	logger.Fatalf("this is a debug message")
-	logger.Errorf("this is a debug message")
 	
 
 	address := [4]byte{127, 0, 0, 1}
@@ -101,10 +95,14 @@ func (e *engine) Launch() {
 		Addr: address,
 	}
 
+	ac := newConnection(int32(fd))
+	ac.local_addr.Address = address
+	ac.local_addr.Port = 4211
+
 	unix.Bind(fd, addr)
 	unix.Listen(fd, 5)
 
-	e.main_evl.register(fd)
+	e.main_evl.register(ac)
 
 }
 
