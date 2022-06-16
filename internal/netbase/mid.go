@@ -8,9 +8,9 @@ type Connection interface {
 	write()
 }
 type EventHandler interface {
-	onMessageArrival(c Connection)
+	MessageArrival(c Connection)
 
-	onConnect()
+	Connect()
 
-	onDisconnect()
+	Disconnect()
 }

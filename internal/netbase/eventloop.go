@@ -63,10 +63,10 @@ func (evl *eventloop) read(c *connection) {
 			}
 			logger.Infof("Connection shut down")
 			evl.unregister(c.fd)
-			evl.handler.onDisconnect()
+			evl.handler.Disconnect()
 		}
 	}
-	evl.handler.onMessageArrival(c)
+	evl.handler.MessageArrival(c)
 
 }
 
@@ -74,7 +74,7 @@ func (evl *eventloop) AcceptHandler(fd int32, event uint32) {
 	if event&InEvents != 0 {
 		c := evl.eng_from.accept(fd)
 		evl.conn_map[c.fd] = c
-		evl.handler.onConnect()
+		evl.handler.Connect()
 	}
 }
 

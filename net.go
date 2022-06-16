@@ -1,4 +1,4 @@
-package snet
+package main
 
 import (
 	"fmt"
@@ -8,18 +8,18 @@ import (
 
 type DefaultHandler struct{}
 
-func (d *DefaultHandler) onConnect() {
+func (d DefaultHandler) Connect() {
 
 	fmt.Println("handler print : connection")
 
 }
-func (d *DefaultHandler) onMessageArrival(c netbase.Connection) {
+func (d DefaultHandler) MessageArrival(c netbase.Connection) {
 
 	fmt.Println("handler print : message")
 
 }
 
-func (d *DefaultHandler) onDisconnect() {
+func (d DefaultHandler) Disconnect() {
 	fmt.Println("handler print : disconnect")
 
 }
@@ -50,11 +50,12 @@ func (s *Server) buildInHandler() {
 
 }
 
-// func main(){
+func main(){
 
-// 	s := Server{
-// 		EventEngine: DefaultEngine(),
-// 		Handler: &netbase.DefaultHandler{},
-// 	}
-// 	s.Launch()
-// }
+
+	s := Server{
+		EventEngine: DefaultEngine(),
+		Handler: DefaultHandler{},
+	}
+	s.Launch()
+}
