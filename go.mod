@@ -1,4 +1,4 @@
-module goserve
+module snet
 
 go 1.18
 

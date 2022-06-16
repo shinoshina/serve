@@ -2,6 +2,7 @@ package netbase
 
 import (
 	"fmt"
+	"snet/internal/base/logger"
 	"runtime"
 
 	"golang.org/x/sys/unix"
@@ -41,8 +42,8 @@ func (p *poller) Epoll(handler epoll_callback)  {
 
 		for i := 0; i < event_num; i++ {
 			ev := event_list[i]
-			fmt.Printf("events : %v",ev.Events)
-			fmt.Println(ev.Fd)
+			logger.Infof("events : %v",ev.Events)
+			logger.Infof("%v",ev.Fd)
 			handler(ev.Fd, ev.Events)
 		}
 	}
@@ -61,7 +62,8 @@ func(p *poller)register(fd int){
 		fmt.Println(err)
 	}
 
-	fmt.Printf("poll register fd : %v \n",fd)
+	logger.Infof("poll register fd : %v ",fd)
+
 }
 
 func(p *poller)unregister(fd int32){
@@ -87,7 +89,7 @@ func epoll_create() (fd int) {
 		fmt.Println(err)
 	}
 
-	fmt.Printf("epoll fd created : %v\n",epfd)
+	logger.Infof("epoll fd created : %v",epfd)
 	return epfd
 }
 

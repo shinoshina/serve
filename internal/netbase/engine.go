@@ -2,6 +2,7 @@ package netbase
 
 import (
 	"fmt"
+	"snet/internal/base/logger"
 
 	"golang.org/x/sys/unix"
 )
@@ -18,6 +19,8 @@ type engine struct {
 
 	num_loops int
 	next_loop int
+
+	handler EventHandler
 }
 
 func NewEngine(num_loops int) (eng *engine) {
@@ -57,13 +60,13 @@ func (eng *engine) dispatch()(num int){
     return
 }
 
-func (eng *engine) register(c *connction,num int) {
+func (eng *engine) register(c *connection,num int) {
 
 	eng.sub_evls[num].register(c)
 	eng.evl_map[c.fd] = eng.sub_evls[num]
 
 }
-func (eng *engine) accept(fd int32) (c *connction) {
+func (eng *engine) accept(fd int32) (c *connection) {
 
 	clifd, cliaddr, _ := unix.Accept4(int(fd), unix.SOCK_NONBLOCK)
 
@@ -71,7 +74,7 @@ func (eng *engine) accept(fd int32) (c *connction) {
 	c.local_addr.Address = cliaddr.(*unix.SockaddrInet4).Addr
 	c.local_addr.Port = cliaddr.(*unix.SockaddrInet4).Port
 
-	fmt.Printf("new connection\naddress : %v \nport : %v\nnumber %v loops listening\n", c.local_addr.Address, c.local_addr.Port,eng.next_loop)
+	logger.Infof("new connection\naddress : %v \nport : %v\nnumber %v loops listening", c.local_addr.Address, c.local_addr.Port,eng.next_loop)
 
 	eng.register(c,eng.dispatch())
 	return
@@ -86,8 +89,7 @@ func (e *engine) Launch() {
 	}
 	e.efd = fd
 
-	fmt.Printf("engine fd : %v \n", e.efd)
-	
+	logger.Infof("engine fd : %v ", e.efd)
 
 	addressb := [4]byte{127, 0, 0, 1}
 	addr := &unix.SockaddrInet4{
@@ -112,4 +114,14 @@ func (eng *engine) Start(){
 		go eng.sub_evls[i].loop()
 	}
 	eng.main_evl.loop()
+}
+
+func (eng *engine) BuiltInhandler(ev EventHandler){
+
+	eng.handler = ev
+
+	eng.main_evl.handler = ev
+	for i := 0; i < eng.num_loops; i++ {
+		eng.sub_evls[i].handler = ev
+	}
 }

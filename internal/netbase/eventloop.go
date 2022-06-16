@@ -1,7 +1,7 @@
 package netbase
 
 import (
-	"goserve/internal/base/logger"
+	"snet/internal/base/logger"
 
 	"golang.org/x/sys/unix"
 )
@@ -16,16 +16,19 @@ const (
 
 type epoll_callback func(fd int32, event uint32)
 
+
 type eventloop struct {
 	eng_from *engine
 
-	conn_map map[int32](*connction)
+	conn_map map[int32](*connection)
 
 	epoll_handler epoll_callback
 
 	epoller *poller
 
 	evl_type string
+
+	handler EventHandler
 }
 
 func (evl *eventloop) unregister(fd int32) {
@@ -44,10 +47,10 @@ func (evl *eventloop) ComputeHandler(fd int32, event uint32) {
 	}
 }
 
-func (evl *eventloop) write(c *connction) {
+func (evl *eventloop) write(c *connection) {
 
 }
-func (evl *eventloop) read(c *connction) {
+func (evl *eventloop) read(c *connection) {
 
 	n, err := c.read()
 	if err != nil || n == 0 {
@@ -60,9 +63,10 @@ func (evl *eventloop) read(c *connction) {
 			}
 			logger.Infof("Connection shut down")
 			evl.unregister(c.fd)
+			evl.handler.onDisconnect()
 		}
 	}
-	c.write()
+	evl.handler.onMessageArrival(c)
 
 }
 
@@ -70,6 +74,7 @@ func (evl *eventloop) AcceptHandler(fd int32, event uint32) {
 	if event&InEvents != 0 {
 		c := evl.eng_from.accept(fd)
 		evl.conn_map[c.fd] = c
+		evl.handler.onConnect()
 	}
 }
 
@@ -77,7 +82,7 @@ func newEventloop(evl_type string) (evl *eventloop) {
 
 	evl = new(eventloop)
 	evl.evl_type = evl_type
-	evl.conn_map = make(map[int32](*connction))
+	evl.conn_map = make(map[int32](*connection))
 
 	if evl_type == "acceptor" {
 		evl.epoll_handler = evl.AcceptHandler
@@ -95,7 +100,7 @@ func (evl *eventloop) loop() {
 	evl.epoller.Epoll(evl.epoll_handler)
 }
 
-func (evl *eventloop) register(c *connction) {
+func (evl *eventloop) register(c *connection) {
 
 	evl.conn_map[c.fd] = c
 	evl.epoller.register(int(c.fd))

@@ -2,7 +2,7 @@ package logger
 
 import (
 	"fmt"
-	"goserve/internal/base/timer"
+	"snet/internal/base/timer"
 	"io"
 	"log"
 	"os"
