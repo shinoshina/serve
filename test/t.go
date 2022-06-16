@@ -1,6 +1,6 @@
 package test
 
-import "goserve/internal/netbase"
+import "github.com/shinoshina/snet/internal/netbase"
 
 
 func main(){

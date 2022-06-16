@@ -1,6 +1,6 @@
-package main
+package snet
 
-import "snet/internal/netbase"
+import "github.com/shinoshina/snet/internal/netbase"
 
 type Server struct {
 	EventEngine *netbase.Engine
@@ -28,11 +28,11 @@ func (s *Server) buildInHandler() {
 
 }
 
-func main(){
+// func main(){
 
-	s := Server{
-		EventEngine: DefaultEngine(),
-		Handler: &netbase.DefaultHandler{},
-	}
-	s.Launch()
-}
+// 	s := Server{
+// 		EventEngine: DefaultEngine(),
+// 		Handler: &netbase.DefaultHandler{},
+// 	}
+// 	s.Launch()
+// }

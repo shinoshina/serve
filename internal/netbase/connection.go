@@ -1,7 +1,7 @@
 package netbase
 
 import (
-	"snet/internal/base/buffer"
+	"github.com/shinoshina/snet/internal/base/buffer"
 
 	"golang.org/x/sys/unix"
 )

@@ -2,7 +2,7 @@ package netbase
 
 import (
 	"fmt"
-	"snet/internal/base/logger"
+	"github.com/shinoshina/snet/internal/base/logger"
 
 	"golang.org/x/sys/unix"
 )

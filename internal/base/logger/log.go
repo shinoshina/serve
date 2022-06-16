@@ -2,7 +2,7 @@ package logger
 
 import (
 	"fmt"
-	"snet/internal/base/timer"
+	"github.com/shinoshina/snet/internal/base/timer"
 	"io"
 	"log"
 	"os"

@@ -2,7 +2,7 @@ package test
 
 import (
 	"fmt"
-	"goserve/internal/netbase"
+	"github.com/shinoshina/snet/internal/netbase"
 )
 
 func t2() {
