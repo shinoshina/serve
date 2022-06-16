@@ -50,12 +50,12 @@ func (s *Server) buildInHandler() {
 
 }
 
-func main(){
+// func main(){
 
 
-	s := Server{
-		EventEngine: DefaultEngine(),
-		Handler: DefaultHandler{},
-	}
-	s.Launch()
-}
+// 	s := Server{
+// 		EventEngine: DefaultEngine(),
+// 		Handler: DefaultHandler{},
+// 	}
+// 	s.Launch()
+// }
