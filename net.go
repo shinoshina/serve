@@ -1,6 +1,28 @@
 package snet
 
-import "github.com/shinoshina/snet/internal/netbase"
+import (
+	"fmt"
+
+	"github.com/shinoshina/snet/internal/netbase"
+)
+
+type DefaultHandler struct{}
+
+func (d *DefaultHandler) onConnect() {
+
+	fmt.Println("handler print : connection")
+
+}
+func (d *DefaultHandler) onMessageArrival(c netbase.Connection) {
+
+	fmt.Println("handler print : message")
+
+}
+
+func (d *DefaultHandler) onDisconnect() {
+	fmt.Println("handler print : disconnect")
+
+}
 
 type Server struct {
 	EventEngine *netbase.Engine
