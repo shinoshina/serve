@@ -23,7 +23,7 @@ func newConnection(fd int32) (c *connection) {
 	return
 }
 
-func (c *connection) write() {
+func (c *connection) Write() {
 	n, err := unix.Write(int(c.fd), c.buf.Raw[:c.buf.E])
 
 	if err != nil || n == 0 {
@@ -40,7 +40,7 @@ func (c *connection) write() {
 	}
 
 }
-func (c *connection) read() (n int, err error) {
+func (c *connection) Read() (n int, err error) {
 
 	// unix.Read will cover the buffer
 	n, err = unix.Read(int(c.fd), c.buf.Raw)

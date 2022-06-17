@@ -4,9 +4,9 @@ import "fmt"
 
 type (
 	Connection interface {
-		read() (int, error)
+		Read() (int, error)
 
-		write()
+		Write()
 	}
 	EventHandler interface {
 		MessageArrival(c Connection)
@@ -34,10 +34,15 @@ func (d DefaultHandler) Disconnect() {
 
 }
 
+
 type Server struct {
 	EventEngine *engine
 
 	Handler EventHandler
+}
+
+type HandlerS struct{
+	DefaultHandler
 }
 
 func DefaultEngine() (e *engine) {
@@ -54,9 +59,12 @@ func (s *Server) Launch() {
 
 }
 
+func test(e EventHandler){
+
+}
+
 func (s *Server) buildInHandler() {
 	s.EventEngine.builtInhandler(s.Handler)
-
 }
 
 // func main(){

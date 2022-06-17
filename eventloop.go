@@ -52,7 +52,7 @@ func (evl *eventloop) write(c *connection) {
 }
 func (evl *eventloop) read(c *connection) {
 
-	n, err := c.read()
+	n, err := c.Read()
 	if err != nil || n == 0 {
 		if err == unix.EAGAIN {
 			logger.Errorf("%v", err)
