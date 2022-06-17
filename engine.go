@@ -1,4 +1,4 @@
-package netbase
+package snet
 
 import (
 	"fmt"
@@ -81,7 +81,7 @@ func (eng *engine) accept(fd int32) (c *connection) {
 
 }
 
-func (e *engine) Launch() {
+func (e *engine) launch() {
 
 	fd, err := unix.Socket(unix.AF_INET, unix.SOCK_STREAM, 0) // | unix.SOCK_NONBLOCK
 	if err != nil {
@@ -108,7 +108,7 @@ func (e *engine) Launch() {
 
 }
 
-func (eng *engine) Start(){
+func (eng *engine) start(){
 
 	for i:= 0;i<eng.num_loops;i++{
 		go eng.sub_evls[i].loop()
@@ -116,7 +116,7 @@ func (eng *engine) Start(){
 	eng.main_evl.loop()
 }
 
-func (eng *engine) BuiltInhandler(ev EventHandler){
+func (eng *engine) builtInhandler(ev EventHandler){
 
 	eng.handler = ev
 

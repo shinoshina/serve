@@ -1,4 +1,4 @@
-package netbase
+package snet
 
 import (
 	"strconv"

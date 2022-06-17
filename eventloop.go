@@ -1,4 +1,4 @@
-package netbase
+package snet
 
 import (
 	"github.com/shinoshina/snet/internal/base/logger"
@@ -37,7 +37,7 @@ func (evl *eventloop) unregister(fd int32) {
 	unix.Close(int(fd))
 
 }
-func (evl *eventloop) ComputeHandler(fd int32, event uint32) {
+func (evl *eventloop) computeHandler(fd int32, event uint32) {
 
 	if event&unix.EPOLLOUT != 0 {
 		logger.Debugf("WRITE EVENT")
@@ -70,7 +70,7 @@ func (evl *eventloop) read(c *connection) {
 
 }
 
-func (evl *eventloop) AcceptHandler(fd int32, event uint32) {
+func (evl *eventloop) acceptHandler(fd int32, event uint32) {
 	if event&InEvents != 0 {
 		c := evl.eng_from.accept(fd)
 		evl.conn_map[c.fd] = c
@@ -85,10 +85,10 @@ func newEventloop(evl_type string) (evl *eventloop) {
 	evl.conn_map = make(map[int32](*connection))
 
 	if evl_type == "acceptor" {
-		evl.epoll_handler = evl.AcceptHandler
+		evl.epoll_handler = evl.acceptHandler
 
 	} else if evl_type == "compute" {
-		evl.epoll_handler = evl.ComputeHandler
+		evl.epoll_handler = evl.computeHandler
 	}
 	evl.epoller = newPoller()
 

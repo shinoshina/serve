@@ -2,12 +2,12 @@ package test
 
 import (
 	"fmt"
-	"github.com/shinoshina/snet/internal/netbase"
+	"github.com/shinoshina/snet"
 )
 
 func t2() {
 
-	a := netbase.Convert("127.0.0.1")
+	a := snet.Convert("127.0.0.1")
 	fmt.Println(a)
 
 }

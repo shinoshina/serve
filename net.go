@@ -1,19 +1,29 @@
-package main
+package snet
 
-import (
-	"fmt"
+import "fmt"
 
-	"github.com/shinoshina/snet/internal/netbase"
+type (
+	Connection interface {
+		read() (int, error)
+
+		write()
+	}
+	EventHandler interface {
+		MessageArrival(c Connection)
+
+		Connect()
+
+		Disconnect()
+	}
+	DefaultHandler struct{}
 )
-
-type DefaultHandler struct{}
 
 func (d DefaultHandler) Connect() {
 
 	fmt.Println("handler print : connection")
 
 }
-func (d DefaultHandler) MessageArrival(c netbase.Connection) {
+func (d DefaultHandler) MessageArrival(c Connection) {
 
 	fmt.Println("handler print : message")
 
@@ -25,33 +35,31 @@ func (d DefaultHandler) Disconnect() {
 }
 
 type Server struct {
-	EventEngine *netbase.Engine
+	EventEngine *engine
 
-	Handler netbase.EventHandler
+	Handler EventHandler
 }
 
-func DefaultEngine() (e *netbase.Engine) {
+func DefaultEngine() (e *engine) {
 
-	e = new(netbase.Engine)
-	e.E = netbase.NewEngine(3)
+	e = NewEngine(3)
 	return
 }
 
 func (s *Server) Launch() {
 
 	s.buildInHandler()
-	s.EventEngine.E.Launch()
-	s.EventEngine.E.Start()
+	s.EventEngine.launch()
+	s.EventEngine.start()
 
 }
 
 func (s *Server) buildInHandler() {
-	s.EventEngine.E.BuiltInhandler(s.Handler)
+	s.EventEngine.builtInhandler(s.Handler)
 
 }
 
 // func main(){
-
 
 // 	s := Server{
 // 		EventEngine: DefaultEngine(),
